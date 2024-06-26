@@ -15,24 +15,34 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(sdv_msgs REQUIRED)
-#find_package(vectornav_msgs REQUIRED)
+find_package(Eigen3 REQUIRED)
 
-find_package(Boost COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system PATHS /usr/local/include)
 
+install(DIRECTORY
+  launch
+  config
+  DESTINATION share/${PROJECT_NAME})
+
+# Executables
 add_executable(uuv_can_node src/can_node_uuv.cpp src/can_node_base.cpp)
+# add_executable(teleop_node src/uuv_teleop.cpp)
+# Adding CAN libraries
 target_include_directories(uuv_can_node PUBLIC
   ${Boost_INCLUDE_DIRS}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs/vanttec_CANLib>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs/vanttec_CANLib/platform_specific/vanttec_canlib_linux>
   $<INSTALL_INTERFACE:include>)
 
+# Adding C requirements
 target_compile_features(uuv_can_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-ament_target_dependencies(uuv_can_node rclcpp std_msgs geometry_msgs std_srvs sdv_msgs)
-
+# Where to find CAN libraries
 add_subdirectory(libs/vanttec_CANLib)
 target_link_libraries(uuv_can_node Vanttec_CANLibLIB Boost::system)
-# include_directories(libs/vanttec_CANLib/platform_specific/vanttec_canlib_linux)
+
+# Adding dependencies
+ament_target_dependencies(uuv_can_node rclcpp std_msgs geometry_msgs std_srvs Eigen3)
+
 
 install(
   TARGETS
