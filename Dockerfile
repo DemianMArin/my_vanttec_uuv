@@ -5,10 +5,17 @@ RUN apt-get update -qq && \
 	apt-get install -y \
 	build-essential \
 	python3-pip -y \
-    xboxdrv -y \
     curl \
 	--no-install-recommends terminator \
 	&& rm -rf /var/lib/apt/lists/*
+
+# Instal ROS dependencies
+RUN apt-get update -qq && \
+    apt-get install -y \
+    ros-humble-joy \
+    ros-humble-joystick-drivers \
+    && rm -rf /var/lib/apt/lists/*
+
 
 # Install python dependencies
 RUN pip install setuptools==58.2.0
