@@ -13,7 +13,6 @@ RUN apt-get update -qq && \
 RUN apt-get update -qq && \
     apt-get install -y \
     ros-humble-joy \
-    ros-humble-joystick-drivers \
     && rm -rf /var/lib/apt/lists/*
 
 
